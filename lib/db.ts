@@ -58,7 +58,7 @@ export async function initDB(): Promise<IDBDatabase> {
 
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result
-      const oldVersion = (event as IDBVersionChangeEvent).oldVersion;
+      const oldVersion = (event).oldVersion;
 
       // Create or update students store
       if (!db.objectStoreNames.contains(STUDENTS_STORE)) {
@@ -99,7 +99,7 @@ export async function initDB(): Promise<IDBDatabase> {
         // If upgrading from version 8, add school index to time records
         const request = event.target as IDBOpenDBRequest;
 const transaction = request?.transaction;
-        if (transaction && transaction.objectStore) {
+        if (transaction?.objectStore) {
           const store = transaction.objectStore(TIME_RECORDS_STORE)
 
           // Add school index if it doesn't exist
@@ -350,7 +350,6 @@ export async function getTimeRecordsByDateAndSchool(
   date: string,
   school: "Higher Education" | "Basic Education",
 ): Promise<TimeRecord[]> {
-  const db = await initDB()
   return new Promise(async (resolve, reject) => {
     try {
       const dateRecords = await getTimeRecordsByDate(date)
