@@ -6,7 +6,6 @@ export function timeRecordsToCSV(
   students: { [key: string]: Student },
   includeHeaders = true,
 ): string {
-  // Define CSV headers
   const headers = [
     "Date",
     "Time",
@@ -17,11 +16,13 @@ export function timeRecordsToCSV(
     "Middle Name",
     "Year Level",
     "Course",
-    "School",
+    "Major",
+    "Semester",
+    "Grade Level",
+    "School"
   ].join(",")
 
-  // Convert each record to CSV row
-  const rows = records.map((record) => {
+  const rows = records.map(record => {
     const student = students[record.studentId] || {
       studentId: record.studentId,
       lastName: "Unknown",
@@ -29,9 +30,9 @@ export function timeRecordsToCSV(
       middleName: "",
       yearLevel: "",
       course: "",
-      id: "",
-      status: "inactive" as const,
-      photoUrl: "",
+      major: "",
+      semester: "",
+      gradeLevel: "",
       school: "",
     }
 
@@ -47,12 +48,14 @@ export function timeRecordsToCSV(
       `"${student.firstName}"`,
       `"${student.middleName}"`,
       student.yearLevel,
-      `"${student.course}"`,
+      `"${student.course || student.program || ''}"`,
+      `"${student.major || ''}"`,
+      `"${student.semester || ''}"`,
+      `"${student.gradeLevel || ''}"`,
       student.school,
     ].join(",")
   })
 
-  // Combine headers and rows
   return includeHeaders ? `${headers}\n${rows.join("\n")}` : rows.join("\n")
 }
 

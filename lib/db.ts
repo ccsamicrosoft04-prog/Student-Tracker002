@@ -58,7 +58,7 @@ export async function initDB(): Promise<IDBDatabase> {
 
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result
-      const oldVersion = event.oldVersion
+      const oldVersion = (event as IDBVersionChangeEvent).oldVersion;
 
       // Create or update students store
       if (!db.objectStoreNames.contains(STUDENTS_STORE)) {
@@ -74,9 +74,10 @@ export async function initDB(): Promise<IDBDatabase> {
         studentsStore.createIndex("yearLevel", "yearLevel", { unique: false })
       } else if (oldVersion < 8) {
         // If upgrading from version 7, add new indexes
-        const transaction = event.target.transaction
-        if (transaction && transaction.objectStore) {
-          const store = transaction.objectStore(STUDENTS_STORE)
+       const request = event.target as IDBOpenDBRequest;
+        const transaction = request.transaction;
+       if (transaction) {
+        const store = transaction.objectStore(STUDENTS_STORE);
 
           // Add new indexes if they don't exist
           if (!store.indexNames.contains("yearLevel")) {
@@ -96,7 +97,8 @@ export async function initDB(): Promise<IDBDatabase> {
         timeRecordsStore.createIndex("school", "school", { unique: false })
       } else if (oldVersion < 9) {
         // If upgrading from version 8, add school index to time records
-        const transaction = event.target.transaction
+        const request = event.target as IDBOpenDBRequest;
+const transaction = request?.transaction;
         if (transaction && transaction.objectStore) {
           const store = transaction.objectStore(TIME_RECORDS_STORE)
 
@@ -661,7 +663,7 @@ export async function deleteAllTimeRecords(school?: "Higher Education" | "Basic 
         const store = transaction.objectStore(TIME_RECORDS_STORE)
         const request = store.clear()
 
-        request.onsuccess = () => resolve(request.result)
+        request.onsuccess = () => resolve(request.result ?? 0)
         request.onerror = () => reject(request.error)
         return
       }

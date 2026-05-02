@@ -133,7 +133,12 @@ export default function TimeRecords() {
   const [basicRecords, setBasicRecords] = useState<TimeRecord[]>([])
   const [studentsMap, setStudentsMap] = useState<Record<string, Student>>({})
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0])
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  // This produces the 'YYYY-MM-DD' string your <Input type="date" /> needs
+  return new Date(now.getTime() - offset).toISOString().split("T")[0];
+});
   const [filterType, setFilterType] = useState<"all" | "in" | "out">("all")
   
   // Dialog State

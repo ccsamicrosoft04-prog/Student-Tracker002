@@ -28,15 +28,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: Readonly<{children: React.ReactNode}>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body 
   className={`${inter.variable} ${poppins.variable} font-sans`}
   style={{ 
-    backgroundImage: "url('/background.JPG')", 
+    backgroundImage: "url('/background.JPG')", // Verify if it's .JPG or .jpg
     backgroundSize: 'cover', 
     backgroundPosition: 'center',
     backgroundAttachment: 'fixed',

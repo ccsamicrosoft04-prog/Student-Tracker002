@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 interface DateRangePickerProps {
   date: DateRange | undefined
-  onDateChange: (date: DateRange) => void
+  onDateChange: (date: DateRange | undefined) => void
   className?: string
 }
 

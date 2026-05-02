@@ -58,13 +58,13 @@ export default function PublicQRScanner() {
       
       if (!student) {
         setStatus({
-          student: null, type: null, variant: "error", timestamp: new Date(),
+          student: null, type: null, variant: "error", timestamp: new Date(new Date().getTime() + 8 * 60 * 60 * 1000),
           message: `UNRECOGNIZED ID: ${cleanId}`,
         })
         return
       }
 
-      const today = new Date().toISOString().split("T")[0]
+      const today = new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString().split("T")[0] // Get current date in YYYY-MM-DD format
       const records = await getTimeRecordsByStudentAndDate(student.studentId, today)
       const latestRecord = records?.sort((a, b) => 
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
@@ -74,11 +74,11 @@ export default function PublicQRScanner() {
 
       await addTimeRecord({
         id: uuidv4(), studentId: student.studentId,
-        timestamp: new Date(), type: nextType, date: today,
+        timestamp: new Date(new Date().getTime() + 8 * 60 * 60 * 1000), type: nextType, date: today,
       })
 
       setStatus({
-        student, type: nextType, variant: "success", timestamp: new Date(),
+        student, type: nextType, variant: "success", timestamp: new Date(new Date().getTime() + 8 * 60 * 60 * 1000),
         message: `${student.firstName} ${student.lastName} matched`,
       })
     } catch (error) {
@@ -88,24 +88,43 @@ export default function PublicQRScanner() {
       setTimeout(() => { cooldownRef.current = false }, 2500)
     }
   }, [isProcessing])
+useEffect(() => {
+  if (activeTab === "manual") {
+    const timer = setTimeout(() => {
+      const input = document.getElementById("terminal-input");
+      if (input) (input as HTMLInputElement).focus();
+    }, 150); // Small delay to ensure the tab is visible
+    return () => clearTimeout(timer);
+  }
+}, [activeTab]);
+ useEffect(() => {
+  const handleGlobalKeyDown = (e: KeyboardEvent) => {
+    // 1. Ignore "special" keys that aren't part of the ID
+    if (e.key === "Shift" || e.key === "Control" || e.key === "Alt") return;
 
-  useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      const currentTime = Date.now()
-      if (currentTime - lastKeyTime.current > 50) scannerBuffer.current = "" 
-      if (e.key === "Enter") {
-        if (scannerBuffer.current.length > 2) {
-          processData(scannerBuffer.current)
-          scannerBuffer.current = ""
-        }
-      } else if (e.key.length === 1) {
-        scannerBuffer.current += e.key
-      }
-      lastKeyTime.current = currentTime
+    const currentTime = Date.now();
+    
+    // 2. Increase the "patience" of the scanner to 200ms
+    if (currentTime - lastKeyTime.current > 200) {
+      scannerBuffer.current = ""; 
     }
-    window.addEventListener("keydown", handleGlobalKeyDown)
-    return () => window.removeEventListener("keydown", handleGlobalKeyDown)
-  }, [processData])
+
+    if (e.key === "Enter") {
+      if (scannerBuffer.current.length > 2) {
+        // 3. Clean the ID (remove non-alphanumeric characters)
+        const cleanedId = scannerBuffer.current.replace(/[^a-zA-Z0-9]/g, "");
+        processData(cleanedId);
+        scannerBuffer.current = "";
+      }
+    } else if (e.key.length === 1) {
+      scannerBuffer.current += e.key;
+    }
+    lastKeyTime.current = currentTime;
+  }
+  
+  window.addEventListener("keydown", handleGlobalKeyDown);
+  return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+}, [processData]);
 
   const stopScanner = useCallback(async () => {
     if (scannerRef.current?.isScanning) {
@@ -196,7 +215,13 @@ export default function PublicQRScanner() {
                       e.currentTarget.reset();
                     }}>
                       <div className="relative">
-                        <Input name="studentId" placeholder="Input Student ID" className="h-16 pl-6 pr-16 text-xl font-mono rounded-2xl border-slate-200 focus:ring-4 focus:ring-indigo-100 transition-all" />
+                       <Input 
+  id="terminal-input"
+  name="studentId" 
+  autoFocus 
+  placeholder="Input Student ID" 
+  className="h-16 pl-6 pr-16 text-xl font-mono rounded-2xl border-slate-200 focus:ring-4 focus:ring-indigo-100 transition-all" 
+/>
                         <Button type="submit" size="icon" disabled={isProcessing} className="absolute right-2 top-2 h-12 w-12 rounded-xl bg-slate-900">
                           {isProcessing ? <Loader2 className="animate-spin w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
                         </Button>

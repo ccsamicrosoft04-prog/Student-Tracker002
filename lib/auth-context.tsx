@@ -38,7 +38,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 const DEFAULT_ADMIN: User = {
   id: "1",
   username: "admin",
-  password: "admin123", // In a real app, this would be hashed
+  password: process.env.DEFAULT_ADMIN_PASSWORD || "admin123" , //Password used for encryption
   role: "admin",
   name: "System Administrator",
   email: "admin@example.com",
