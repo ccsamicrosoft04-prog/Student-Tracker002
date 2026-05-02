@@ -6,6 +6,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import ScannerContainer from "@/components/scanner-container"
 import { LockKeyhole, Clock } from "lucide-react"
+import {saveRecord} from '../actions';
 
 export default function PublicScannerPage() {
   const [currentTime, setCurrentTime] = useState(new Date())
