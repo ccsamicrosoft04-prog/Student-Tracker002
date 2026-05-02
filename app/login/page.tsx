@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { LockKeyhole, AlertCircle, KeyRound, Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react"
+import { AlertCircle, KeyRound, Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 

@@ -22,7 +22,6 @@ import {
   addTimeRecord,
   getTimeRecordsByStudentAndDate,
   type Student,
-  type TimeRecord,
 } from "@/lib/db"
 
 export default function PublicQRScanner() {
@@ -58,15 +57,15 @@ export default function PublicQRScanner() {
       
       if (!student) {
         setStatus({
-          student: null, type: null, variant: "error", timestamp: new Date(new Date().getTime() + 8 * 60 * 60 * 1000),
+          student: null, type: null, variant: "error", timestamp: new Date(Date.now() + 8 * 60 * 60 * 1000),
           message: `UNRECOGNIZED ID: ${cleanId}`,
         })
         return
       }
 
-      const today = new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toISOString().split("T")[0] // Get current date in YYYY-MM-DD format
+      const today = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().split("T")[0] // Get current date in YYYY-MM-DD format
       const records = await getTimeRecordsByStudentAndDate(student.studentId, today)
-      const latestRecord = records?.sort((a, b) => 
+      const latestRecord = records?.toSorted((a, b) => 
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       )[0]
       
@@ -74,11 +73,11 @@ export default function PublicQRScanner() {
 
       await addTimeRecord({
         id: uuidv4(), studentId: student.studentId,
-        timestamp: new Date(new Date().getTime() + 8 * 60 * 60 * 1000), type: nextType, date: today,
+        timestamp: new Date(Date.now() + 8 * 60 * 60 * 1000), type: nextType, date: today,
       })
 
       setStatus({
-        student, type: nextType, variant: "success", timestamp: new Date(new Date().getTime() + 8 * 60 * 60 * 1000),
+        student, type: nextType, variant: "success", timestamp: new Date(Date.now() + 8 * 60 * 60 * 1000),
         message: `${student.firstName} ${student.lastName} matched`,
       })
     } catch (error) {
@@ -112,7 +111,7 @@ useEffect(() => {
     if (e.key === "Enter") {
       if (scannerBuffer.current.length > 2) {
         // 3. Clean the ID (remove non-alphanumeric characters)
-        const cleanedId = scannerBuffer.current.replace(/[^a-zA-Z0-9]/g, "");
+        const cleanedId = scannerBuffer.current.replaceAll(/[^a-zA-Z0-9]/g, "");
         processData(cleanedId);
         scannerBuffer.current = "";
       }
@@ -122,8 +121,8 @@ useEffect(() => {
     lastKeyTime.current = currentTime;
   }
   
-  window.addEventListener("keydown", handleGlobalKeyDown);
-  return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  globalThis.addEventListener("keydown", handleGlobalKeyDown);
+  return () => globalThis.removeEventListener("keydown", handleGlobalKeyDown);
 }, [processData]);
 
   const stopScanner = useCallback(async () => {
@@ -157,7 +156,7 @@ useEffect(() => {
     <div className="min-h-screen  flex items-center justify-center p-4 antialiased selection:bg-indigo-100">
       <Card className="w-full max-w-6xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] border-none overflow-hidden rounded-[40px]">
         <CardContent className="p-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[720px]">
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 min-h-[720px]">
             
             {/* LEFT PANEL: SCANNING INTERFACE */}
             <div className="p-10 bg-white flex flex-col border-r border-slate-100">

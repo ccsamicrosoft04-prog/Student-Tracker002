@@ -44,7 +44,7 @@ const ChartContainer = React.forwardRef<
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId()
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
+  const chartId = `chart-${id || uniqueId.replaceAll(':', "")}`
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -145,7 +145,7 @@ const ChartTooltipContent = React.forwardRef<
       const itemConfig = getPayloadConfigFromPayload(config, item, key)
       const value =
         !labelKey && typeof label === "string"
-          ? config[label as keyof typeof config]?.label || label
+          ? config[label]?.label || label
           : itemConfig?.label
 
       if (labelFormatter) {
@@ -185,7 +185,7 @@ const ChartTooltipContent = React.forwardRef<
           className
         )}
       >
-        {!nestLabel ? tooltipLabel : null}
+        {nestLabel ? null : tooltipLabel}
         <div className="grid gap-1.5">
           {payload.map((item, index) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
@@ -355,7 +355,7 @@ function getPayloadConfigFromPayload(
 
   return configLabelKey in config
     ? config[configLabelKey]
-    : config[key as keyof typeof config]
+    : config[key]
 }
 
 export {

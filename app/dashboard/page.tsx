@@ -104,7 +104,7 @@ export default function DashboardPage() {
 
 /** * Helper Component for Permission List 
  */
-function SystemInfoItem({ icon, label, value, isPublic = false }: { icon: React.ReactNode, label: string, value: string, isPublic?: boolean }) {
+function SystemInfoItem({ icon, label, value, isPublic = false }: Readonly<{ icon: React.ReactNode, label: string, value: string, isPublic?: boolean }>) {
   return (
     <li className="flex items-center justify-between group">
       <div className="flex items-center gap-3">

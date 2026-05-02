@@ -873,7 +873,7 @@ export default function StudentManagement() {
                         <SelectValue placeholder="Select Major" />
                       </SelectTrigger>
                       <SelectContent>
-                        {availableMajors && availableMajors.map((major) => (
+                        {availableMajors?.map((major) => (
                           <SelectItem key={major} value={major} className="text-base">
                             {major}
                           </SelectItem>

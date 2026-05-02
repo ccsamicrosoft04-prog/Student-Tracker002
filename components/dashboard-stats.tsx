@@ -139,7 +139,7 @@ export default function DashboardStats() {
 /**
  * Reusable Stat Card Component
  */
-function StatSummaryCard({ title, value, icon, color }: { title: string, value?: number, icon: React.ReactNode, color: string }) {
+function StatSummaryCard({ title, value, icon, color }: Readonly<{ title: string, value?: number, icon: React.ReactNode, color: string }>) {
   return (
     <Card className="border-none shadow-sm rounded-[2rem] overflow-hidden bg-white hover:shadow-md transition-shadow">
       <CardContent className="p-6">

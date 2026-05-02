@@ -135,7 +135,7 @@ function ReportsContent() {
       <div className="flex-1 flex flex-col items-center justify-center space-y-4">
         <AlertCircle className="h-10 w-10 text-destructive" />
         <p className="text-slate-600 font-medium">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+        <Button onClick={() => globalThis.location.reload()}>Retry</Button>
       </div>
     )
   }
@@ -186,7 +186,7 @@ function ReportsContent() {
   )
 }
 
-function StatCard({ title, value, icon }: { title: string, value: number, icon: React.ReactNode }) {
+function StatCard({ title, value, icon }: Readonly<{ title: string, value: number, icon: React.ReactNode }>) {
   return (
     <Card className="border-none shadow-sm">
       <CardContent className="p-6">

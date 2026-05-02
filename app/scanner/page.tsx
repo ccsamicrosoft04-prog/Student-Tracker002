@@ -6,7 +6,6 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import ScannerContainer from "@/components/scanner-container"
 import { LockKeyhole, Clock } from "lucide-react"
-import {saveRecord} from '../actions';
 
 export default function PublicScannerPage() {
   const [currentTime, setCurrentTime] = useState(new Date())
@@ -78,16 +77,16 @@ export default function PublicScannerPage() {
         
         {/* THE CURVED CONTAINER (Matches your screenshots) */}
         <div className="
-                bg-black/40 backdrop-blur-md 
+                bg-black/20 backdrop-blur-md-2
                 rounded-[1rem] 
                 shadow-[0_8px_30px_rgb(0,0,0,0.1)] 
                 border border-white/10 
                 overflow-hidden 
                 /* THIS IS THE FIX: Uniform padding for all sides */
-                p-8 
+                p-4
   
                 /* Adds spacing between the header and the search bar/table */
-                flex flex-col gap-6">
+                flex flex-col gap-0">
            {/* Inside ScannerContainer, ensure your left panel has 'bg-black/40' 
              and the right panel has 'bg-[#0c0e17]' 
            */}
@@ -98,7 +97,7 @@ export default function PublicScannerPage() {
       {/* MINIMAL FOOTER */}
 
       <footer className="py-6 bg-white border-t border-slate-100">
-        <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
           <div className="flex gap-6 text-[11px] font-bold uppercase tracking-widest">
             <span className="text-indigo-600/60">System Active</span>
             <span className="hover:text-slate-600 cursor-help transition-colors">Privacy Policy</span>

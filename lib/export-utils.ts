@@ -72,7 +72,7 @@ export function downloadAsFile(data: string, filename: string, mimeType: string)
 
   // Clean up
   setTimeout(() => {
-    document.body.removeChild(link)
+    link.remove()
     URL.revokeObjectURL(url)
   }, 100)
 }

@@ -12,7 +12,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { 
-  Pencil, Trash2, Calendar, LogIn, LogOut, Clock, Filter, 
+  Pencil, Trash2, LogIn, LogOut, Clock, Filter, 
   ChevronDown, FileDown, GraduationCap, School 
 } from "lucide-react"
 
@@ -24,7 +24,7 @@ import {
   type TimeRecord,
   type Student,
 } from "@/lib/db"
-import { timeRecordsToCSV, downloadAsFile, formatDateForFilename } from "@/lib/export-utils"
+import { timeRecordsToCSV, downloadAsFile } from "@/lib/export-utils"
 
 // --- Types ---
 interface PairedRecord {
@@ -51,7 +51,7 @@ interface RecordTableProps {
   onDelete: (id: string) => void
 }
 
-function RecordTable({ records, isLoading, onEdit, onDelete }: RecordTableProps) {
+function RecordTable({ records, isLoading, onEdit, onDelete }: Readonly<RecordTableProps>) {
   if (isLoading) {
     return (
       <div className="p-8 text-center">
